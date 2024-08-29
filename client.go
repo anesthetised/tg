@@ -31,6 +31,7 @@ func New(token string, opts ...Option) *Client {
 
 	defaultOpts := []Option{
 		WithBaseURL(defaultBaseURL),
+		WithLogger(slog.New(slog.NewJSONHandler(io.Discard, nil))),
 	}
 
 	for _, opt := range append(defaultOpts, opts...) {
