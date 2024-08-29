@@ -8,6 +8,7 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"time"
 )
 
 const BaseURL = "https://api.telegram.org/bot"
@@ -30,8 +31,9 @@ func New(token string, opts ...Option) *Client {
 	c := &Client{token: token}
 
 	defaultOpts := []Option{
-		WithBaseURL(BaseURL),
 		WithLogger(slog.New(slog.NewJSONHandler(io.Discard, nil))),
+		WithHTTPClient(&http.Client{Timeout: 30 * time.Second}),
+		WithBaseURL(BaseURL),
 	}
 
 	for _, opt := range append(defaultOpts, opts...) {
