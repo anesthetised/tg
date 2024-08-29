@@ -37,6 +37,33 @@ func run(ctx context.Context, conf *Config, logger *slog.Logger) error {
 		"is_bot", user.IsBot,
 	)
 
+	for upd := range tg.Updates(ctx, caller, 0, 0, nil) {
+		msg := upd.Message
+		if msg == nil {
+			continue
+		}
+
+		sender := msg.Sender()
+
+		logger.Info("message",
+			"id", msg.ID,
+			"time", msg.Time(),
+			slog.Group("chat",
+				"id", msg.Chat.ID,
+				"type", msg.Chat.Type,
+				"title", msg.Chat.Title,
+			),
+			slog.Group("sender",
+				"id", sender.ID,
+				"username", sender.Username,
+				"first_name", sender.FirstName,
+				"last_name", sender.LastName,
+				"lang_code", sender.LanguageCode,
+			),
+			"text", msg.Text,
+		)
+	}
+
 	return nil
 }
 
@@ -59,5 +86,8 @@ func main() {
 	}
 	if err != nil {
 		logger.Error("operation is failed", "err", err)
+		return
 	}
+
+	logger.Info("done")
 }
