@@ -19,6 +19,10 @@ func WithHTTPClient(httpClient HTTPClientDoer) Option {
 
 func WithBaseURL(baseURL string) Option {
 	return func(c *Client) {
+		if baseURL == "" {
+			baseURL = BaseURL
+		}
+
 		c.baseURL = baseURL
 	}
 }
