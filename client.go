@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-const defaultBaseURL = "https://api.telegram.org/bot"
+const BaseURL = "https://api.telegram.org/bot"
 
 type Client struct {
 	log        *slog.Logger
@@ -30,7 +30,7 @@ func New(token string, opts ...Option) *Client {
 	c := &Client{token: token}
 
 	defaultOpts := []Option{
-		WithBaseURL(defaultBaseURL),
+		WithBaseURL(BaseURL),
 		WithLogger(slog.New(slog.NewJSONHandler(io.Discard, nil))),
 	}
 
