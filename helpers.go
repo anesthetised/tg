@@ -13,6 +13,13 @@ func Updates(ctx context.Context, c Caller, limit int, timeout time.Duration, on
 	go func() {
 		defer close(updatesChan)
 
+		if limit == 0 {
+			limit = 1000
+		}
+		if timeout == 0 {
+			timeout = 30 * time.Second
+		}
+
 		req := RequestGetUpdates{
 			Limit:   limit,
 			Timeout: int(timeout.Microseconds() * 1000),
