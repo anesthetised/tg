@@ -25,6 +25,6 @@ func WithBaseURL(baseURL string) Option {
 
 func WithLogger(logger *slog.Logger) Option {
 	return func(c *Client) {
-		c.
+		c.log = logger
 	}
 }
