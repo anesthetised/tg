@@ -9,7 +9,7 @@ func GetUpdates(ctx context.Context, c Caller, req RequestGetUpdates) ([]Update,
 	if err != nil {
 		return nil, err
 	}
-	return decodePayload[[]Update](resp)
+	return DecodeJSON[[]Update](resp)
 }
 
 func GetMe(ctx context.Context, c Caller) (*User, error) {
@@ -17,7 +17,7 @@ func GetMe(ctx context.Context, c Caller) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	return decodePayload[*User](resp)
+	return DecodeJSON[*User](resp)
 }
 
 func SendMessage[R Recipient, M ReplyMarkup](ctx context.Context,
@@ -40,5 +40,5 @@ func SendMessage[R Recipient, M ReplyMarkup](ctx context.Context,
 		return nil, err
 	}
 
-	return decodePayload[*Message](resp)
+	return DecodeJSON[*Message](resp)
 }

@@ -19,7 +19,7 @@ func TestClient(t *testing.T) {
 	data, err := c.Call(context.Background(), zero)
 	assert.NoError(t, err)
 
-	req, err := decodePayload[RequestGetMe](data)
+	req, err := DecodeJSON[RequestGetMe](data)
 	assert.NoError(t, err)
 
 	assert.ObjectsAreEqual(zero, req)

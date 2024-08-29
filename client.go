@@ -92,7 +92,7 @@ func (c *Client) parseResponse(r io.Reader) (json.RawMessage, error) {
 	return resp.Result, nil
 }
 
-func decodePayload[T any](payload []byte) (T, error) {
+func DecodeJSON[T any](payload []byte) (T, error) {
 	var (
 		val = new(T)
 		err = json.Unmarshal(payload, val)
