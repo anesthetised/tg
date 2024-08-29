@@ -89,13 +89,13 @@ func (r RequestGetUpdates) Params() json.RawMessage {
 	return params
 }
 
-type requestGetMe struct{}
+type RequestGetMe struct{}
 
-func (r requestGetMe) Method() string {
+func (r RequestGetMe) Method() string {
 	return "getMe"
 }
 
-func (r requestGetMe) Params() json.RawMessage {
+func (r RequestGetMe) Params() json.RawMessage {
 	return nil
 }
 

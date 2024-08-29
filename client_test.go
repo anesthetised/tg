@@ -13,13 +13,13 @@ var (
 )
 
 func TestClient(t *testing.T) {
-	zero := requestGetMe{}
-	c := newClientMock[requestGetMe](zero)
+	zero := RequestGetMe{}
+	c := newClientMock[RequestGetMe](zero)
 
 	data, err := c.Call(context.Background(), zero)
 	assert.NoError(t, err)
 
-	req, err := decodePayload[requestGetMe](data)
+	req, err := decodePayload[RequestGetMe](data)
 	assert.NoError(t, err)
 
 	assert.ObjectsAreEqual(zero, req)

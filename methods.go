@@ -13,7 +13,7 @@ func GetUpdates(ctx context.Context, c Caller, req RequestGetUpdates) ([]Update,
 }
 
 func GetMe(ctx context.Context, c Caller) (*User, error) {
-	resp, err := c.Call(ctx, requestGetMe{})
+	resp, err := c.Call(ctx, RequestGetMe{})
 	if err != nil {
 		return nil, err
 	}
