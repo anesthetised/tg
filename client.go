@@ -6,12 +6,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"log/slog"
 	"net/http"
 	"time"
 )
 
 const BaseURL = "https://api.telegram.org/bot"
+
+type GetLogger interface {
+	Logger() *log.Logger
+}
 
 type Client struct {
 	log        *slog.Logger
@@ -40,15 +45,20 @@ func New(token string, opts ...Option) *Client {
 		opt(c)
 	}
 
+	c.log.Debug("client initialised", "base_url", c.baseURL)
+
 	return c
 }
 
 func (c *Client) Call(ctx context.Context, value Sendable) (json.RawMessage, error) {
+	method := value.Method()
+	params := value.Params()
+
 	req, err := http.NewRequestWithContext(
 		ctx,
 		"POST",
-		fmt.Sprintf("%s%s/%s", c.baseURL, c.token, value.Method()),
-		bytes.NewReader(value.Params()),
+		fmt.Sprintf("%s%s/%s", c.baseURL, c.token, method),
+		bytes.NewReader(params),
 	)
 	if err != nil {
 		return nil, err
@@ -56,11 +66,16 @@ func (c *Client) Call(ctx context.Context, value Sendable) (json.RawMessage, err
 
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
 
+	logCtx := c.log.With("method", method)
+	logCtx.Debug("sending request", "params", string(params))
+
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer func() { _ = resp.Body.Close() }()
+
+	logCtx.Debug("received response", "status_code", resp.StatusCode)
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -73,6 +88,10 @@ func (c *Client) Call(ctx context.Context, value Sendable) (json.RawMessage, err
 	}
 
 	return c.parseResponse(resp.Body)
+}
+
+func (c *Client) Logger() *slog.Logger {
+	return c.log
 }
 
 func (c *Client) parseResponse(r io.Reader) (json.RawMessage, error) {

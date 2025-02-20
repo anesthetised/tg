@@ -62,6 +62,11 @@ func run(ctx context.Context, conf *Config, logger *slog.Logger) error {
 			),
 			"text", msg.Text,
 		)
+
+		_, err = tg.SendMessage[int64, tg.NoneMarkup](ctx, caller, msg.Chat.ID, msg.Text)
+		if err != nil {
+			logger.Error("send message", "err", err)
+		}
 	}
 
 	return nil
@@ -70,11 +75,11 @@ func run(ctx context.Context, conf *Config, logger *slog.Logger) error {
 func main() {
 	var conf Config
 
-	flag.StringVar(&conf.BaseURL, "url", "", "API base URL")
+	flag.StringVar(&conf.BaseURL, "url", tg.BaseURL, "API base URL")
 	flag.StringVar(&conf.Token, "token", "", "bot token")
 	flag.Parse()
 
-	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}))
 
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()

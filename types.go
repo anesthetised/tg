@@ -180,8 +180,10 @@ type Recipient interface {
 }
 
 type ReplyMarkup interface {
-	KeyboardMarkup | InlineKeyboardMarkup
+	NoneMarkup | KeyboardMarkup | InlineKeyboardMarkup
 }
+
+type NoneMarkup struct{}
 
 type KeyboardMarkup struct {
 	Keyboard        [][]KeyboardButton `json:"keyboard"`
